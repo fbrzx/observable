@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Weather Forecast Visualization</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="modulepreload" href="./_observablehq/client.df97ed77.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/e324157d.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/5ced1d52.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/02d43215.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/aa00730b.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.df97ed77.js";
+import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+
+registerFile("./data/weather.json", {"name":"./data/weather.json","mimeType":"application/json","path":"./_file/data/weather.ee344987.json","lastModified":1772653836892,"size":6075});
+
+define({id: "ebfdb2e0", inputs: ["FileAttachment"], outputs: ["weatherData","periods"], body: async (FileAttachment) => {
+// Load the pre-processed JSON data
+// FileAttachment().json() returns a promise that the runtime automatically awaits
+const weatherData = await FileAttachment("./data/weather.json").json();
+const periods = weatherData.periods;
+return {weatherData,periods};
+}});
+
+define({id: "da4594a9", inputs: ["d3","periods","display"], body: (d3,periods,display) => {
+// Create the temperature line chart
+{
+  const width = 900;
+  const height = 400;
+  const margin = {top: 20, right: 30, bottom: 60, left: 50};
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  // Parse dates
+  const parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S%Z");
+  const dates = periods.map(d => parseDate(d.startTime));
+
+  // Scales
+  const x = d3.scaleTime()
+    .domain(d3.extent(dates))
+    .range([0, innerWidth]);
+
+  const y = d3.scaleLinear()
+    .domain([
+      d3.min(periods, d => d.temperature) - 5,
+      d3.max(periods, d => d.temperature) + 5
+    ])
+    .range([innerHeight, 0]);
+
+  // Line generator
+  const line = d3.line()
+    .x((d, i) => x(dates[i]))
+    .y(d => y(d.temperature))
+    .curve(d3.curveMonotoneX);
+
+  // Area generator
+  const area = d3.area()
+    .x((d, i) => x(dates[i]))
+    .y0(innerHeight)
+    .y1(d => y(d.temperature))
+    .curve(d3.curveMonotoneX);
+
+  // Create SVG
+  const svg = d3.create("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Gradient definition
+  const defs = svg.append("defs");
+  const gradient = defs.append("linearGradient")
+    .attr("id", "tempGradient")
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "0%")
+    .attr("y2", "100%");
+
+  gradient.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#f768a1")
+    .attr("stop-opacity", 0.8);
+
+  gradient.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#f768a1")
+    .attr("stop-opacity", 0.1);
+
+  // Area fill
+  g.append("path")
+    .datum(periods)
+    .attr("fill", "url(#tempGradient)")
+    .attr("d", area);
+
+  // Line
+  g.append("path")
+    .datum(periods)
+    .attr("fill", "none")
+    .attr("stroke", "#f768a1")
+    .attr("stroke-width", 3)
+    .attr("d", line);
+
+  // Points
+  g.selectAll("circle")
+    .data(periods)
+    .join("circle")
+    .attr("cx", (d, i) => x(dates[i]))
+    .attr("cy", d => y(d.temperature))
+    .attr("r", 4)
+    .attr("fill", "#fff")
+    .attr("stroke", "#f768a1")
+    .attr("stroke-width", 2)
+    .append("title")
+    .text(d => `${d.shortForecast}\n${d.temperature}°${d.temperatureUnit}\nWind: ${d.windSpeed} ${d.windDirection}`)
+    .style("fill", "#fff");
+
+  // X Axis
+  g.append("g")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(d3.axisBottom(x)
+      .ticks(d3.timeHour.every(6))
+      .tickFormat(d3.timeFormat("%b %d\n%H:%M")))
+    .selectAll("text")
+    .attr("transform", "rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Y Axis
+  g.append("g")
+    .call(d3.axisLeft(y)
+      .tickFormat(d => `${d}°F`));
+
+  // Y Axis Label
+  g.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -innerHeight / 2)
+    .attr("y", -40)
+    .text("Temperature (°F)")
+    .attr("text-anchor", "middle")
+    .style("font-size", "12px")
+    .style("fill", "#fff");
+
+  // Title
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", 15)
+    .text(`24-Hour Temperature Forecast - San Francisco`)
+    .attr("text-anchor", "middle")
+    .style("font-size", "14px")
+    .style("font-weight", "bold")
+    .style("fill", "#fff");
+
+  display(svg.node());
+}
+}});
+
+define({id: "3bfdffa6", inputs: ["periods","d3","display"], body: (periods,d3,display) => {
+// Create a bar chart for wind speed
+{
+  const displayPeriods = periods.slice(0, 12); // Show first 12 hours
+
+  const width = 700;
+  const height = 300;
+  const margin = {top: 20, right: 20, bottom: 60, left: 50};
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  // Parse wind speed (handle ranges like "10-15 mph")
+  const parseWindSpeed = (str) => {
+    const match = str.match(/(\d+)/);
+    return match ? parseInt(match[1]) : 0;
+  };
+
+  const windSpeeds = displayPeriods.map(d => parseWindSpeed(d.windSpeed));
+  const labels = displayPeriods.map(d => {
+    const date = new Date(d.startTime);
+    return date.getHours() + ":00";
+  });
+
+  // Scales
+  const x = d3.scaleBand()
+    .domain(labels)
+    .range([0, innerWidth])
+    .padding(0.2);
+
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(windSpeeds) + 5])
+    .range([innerHeight, 0]);
+
+  // Color scale for wind
+  const windColor = d3.scaleThreshold()
+    .domain([10, 20, 30])
+    .range(["#a8ddb5", "#4eb3d3", "#f768a1", "#882371"]);
+
+  // Create SVG
+  const svg = d3.create("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Bars
+  g.selectAll("rect")
+    .data(windSpeeds)
+    .join("rect")
+    .attr("x", (d, i) => x(labels[i]))
+    .attr("y", d => y(d))
+    .attr("width", x.bandwidth())
+    .attr("height", d => innerHeight - y(d))
+    .attr("fill", d => windColor(d))
+    .append("title")
+    .text((d, i) => `${displayPeriods[i].shortForecast}\nWind: ${displayPeriods[i].windSpeed} ${displayPeriods[i].windDirection}`)
+    .style("fill", "#fff");
+
+  // X Axis
+  g.append("g")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Y Axis
+  g.append("g")
+    .call(d3.axisLeft(y));
+
+  // Labels
+  g.append("text")
+    .attr("x", innerWidth / 2)
+    .attr("y", innerHeight + 50)
+    .text("Hour")
+    .attr("text-anchor", "middle");
+
+  g.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -innerHeight / 2)
+    .attr("y", -40)
+    .text("Wind Speed (mph)") 
+    .style("fill", "#fff")
+    .attr("text-anchor", "middle");
+
+  // Title
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", 15)
+    .text("Wind Speed Forecast (first 12 hours)")
+    .attr("text-anchor", "middle")
+    .style("font-size", "14px")
+    .style("fill", "#fff")
+    .style("font-weight", "bold");
+
+  display(svg.node());
+}
+}});
+
+define({id: "724b5f00", inputs: ["periods","display"], body: (periods,display) => {
+// Display table
+{
+  const displayPeriods = periods.slice(0, 12);
+
+  const table = document.createElement("table");
+  table.style.width = "100%";
+  table.style.borderCollapse = "collapse";
+  table.style.fontSize = "13px";
+
+  const thead = table.createTHead();
+  const headRow = thead.insertRow();
+  headRow.style.borderBottom = "2px solid #ddd";
+
+  const headers = ["Time", "Temp (°F)", "Forecast", "Wind"];
+  const headerAlign = ["left", "center", "left", "center"];
+
+  headers.forEach((text, i) => {
+    const th = document.createElement("th");
+    th.textContent = text;
+    th.style.padding = "10px";
+    th.style.textAlign = headerAlign[i];
+    headRow.appendChild(th);
+  });
+
+  const tbody = table.createTBody();
+
+  displayPeriods.forEach(p => {
+    const row = tbody.insertRow();
+    row.style.borderBottom = "1px solid #eee";
+
+    const timeCell = row.insertCell();
+    timeCell.style.padding = "10px";
+    timeCell.textContent = new Date(p.startTime).toLocaleString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric"
+    });
+
+    const tempCell = row.insertCell();
+    tempCell.style.padding = "10px";
+    tempCell.style.textAlign = "center";
+    tempCell.style.fontWeight = "bold";
+    tempCell.style.color = "#f768a1";
+    tempCell.textContent = `${p.temperature}°`;
+
+    const forecastCell = row.insertCell();
+    forecastCell.style.padding = "10px";
+    forecastCell.textContent = p.shortForecast;
+
+    const windCell = row.insertCell();
+    windCell.style.padding = "10px";
+    windCell.style.textAlign = "center";
+    windCell.textContent = `${p.windSpeed} ${p.windDirection}`;
+  });
+
+  display(table);
+}
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Home</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./countries">Countries Data Dashboard</a></li>
+    <li class="observablehq-link"><a href="./earthquakes">Earthquake Visualization</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./weather">Weather Forecast Visualization</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#data-flow">Data Flow</a></li>
+<li class="observablehq-secondary-link"><a href="#load-data">Load Data</a></li>
+<li class="observablehq-secondary-link"><a href="#temperature-forecast-chart">Temperature Forecast Chart</a></li>
+<li class="observablehq-secondary-link"><a href="#wind-speed-visualization">Wind Speed Visualization</a></li>
+<li class="observablehq-secondary-link"><a href="#forecast-data-table">Forecast Data Table</a></li>
+<li class="observablehq-secondary-link"><a href="#how-this-works">How This Works</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<h1 id="weather-forecast-visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#weather-forecast-visualization">Weather Forecast Visualization</a></h1>
+<p>This page demonstrates loading JSON data that was processed at build time from a chained API request.</p>
+<h2 id="data-flow" tabindex="-1"><a class="observablehq-header-anchor" href="#data-flow">Data Flow</a></h2>
+<pre><code>weather.json.js (build time)
+  → Fetches grid point from weather.gov
+  → Fetches forecast using grid point URL
+  → Outputs weather.json (static file)
+  → This page loads and visualizes (runtime)
+</code></pre>
+<h2 id="load-data" tabindex="-1"><a class="observablehq-header-anchor" href="#load-data">Load Data</a></h2>
+<div class="observablehq observablehq--block"><!--:ebfdb2e0:--></div>
+<h2 id="temperature-forecast-chart" tabindex="-1"><a class="observablehq-header-anchor" href="#temperature-forecast-chart">Temperature Forecast Chart</a></h2>
+<div class="observablehq observablehq--block"><!--:da4594a9:--></div>
+<h2 id="wind-speed-visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#wind-speed-visualization">Wind Speed Visualization</a></h2>
+<div class="observablehq observablehq--block"><!--:3bfdffa6:--></div>
+<h2 id="forecast-data-table" tabindex="-1"><a class="observablehq-header-anchor" href="#forecast-data-table">Forecast Data Table</a></h2>
+<div class="observablehq observablehq--block"><!--:724b5f00:--></div>
+<h2 id="how-this-works" tabindex="-1"><a class="observablehq-header-anchor" href="#how-this-works">How This Works</a></h2>
+<ol>
+<li>
+<p><strong>Build Time</strong>: <code>weather.json.js</code> makes <strong>two chained API requests</strong>:</p>
+<ul>
+<li>First to get the grid point for coordinates</li>
+<li>Second to get the forecast using the URL from step 1</li>
+</ul>
+</li>
+<li>
+<p><strong>Processing</strong>: The data is simplified and limited to 24 periods</p>
+</li>
+<li>
+<p><strong>Runtime</strong>: The visualization loads instantly from the static JSON file</p>
+</li>
+<li>
+<p><strong>Key Pattern</strong>: Use <code>await FileAttachment(...).json()</code> to load data, then reference it directly in subsequent code blocks</p>
+</li>
+</ol>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./earthquakes"><span>Earthquake Visualization</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-03-04T20:06:18">Mar 4, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Observable Data Processing Demo</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="modulepreload" href="./_observablehq/client.df97ed77.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<script type="module">
+
+import "./_observablehq/client.df97ed77.js";
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link observablehq-link-active"><a href="./">Home</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./countries">Countries Data Dashboard</a></li>
+    <li class="observablehq-link"><a href="./earthquakes">Earthquake Visualization</a></li>
+    <li class="observablehq-link"><a href="./weather">Weather Forecast Visualization</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#how-observable-processes-data">How Observable Processes Data</a></li>
+<li class="observablehq-secondary-link"><a href="#live-examples">Live Examples</a></li>
+<li class="observablehq-secondary-link"><a href="#file-structure">File Structure</a></li>
+<li class="observablehq-secondary-link"><a href="#key-concepts">Key Concepts</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<h1 id="observable-data-processing-demo" tabindex="-1"><a class="observablehq-header-anchor" href="#observable-data-processing-demo">Observable Data Processing Demo</a></h1>
+<p>This demo shows how <strong>Observable Framework</strong> processes data at build time and renders interactive visualizations.</p>
+<hr>
+<h2 id="how-observable-processes-data" tabindex="-1"><a class="observablehq-header-anchor" href="#how-observable-processes-data">How Observable Processes Data</a></h2>
+<p>Observable Framework uses <strong>data loaders</strong> - scripts that run during build time to:</p>
+<ol>
+<li><strong>Fetch</strong> data from APIs, databases, or files</li>
+<li><strong>Transform</strong> and aggregate the data</li>
+<li><strong>Output</strong> static snapshots (CSV, JSON, etc.)</li>
+<li><strong>Serve</strong> the pre-processed data to the browser instantly</li>
+</ol>
+<p>The key insight: <strong>data processing happens on the server during build, not in the browser</strong>. This means:</p>
+<ul>
+<li>Faster page loads for users</li>
+<li>No API keys exposed to the client</li>
+<li>Data can be pre-filtered and aggregated</li>
+<li>Complex computations done once, not per-user</li>
+</ul>
+<hr>
+<h2 id="live-examples" tabindex="-1"><a class="observablehq-header-anchor" href="#live-examples">Live Examples</a></h2>
+<p>Click on each section below to see the data loaders in action with interactive visualizations.</p>
+<h3 id="1-earthquake-map" tabindex="-1"><a class="observablehq-header-anchor" href="#1-earthquake-map">1. Earthquake Map</a></h3>
+<p>See real-time earthquake data fetched from USGS, transformed from GeoJSON to CSV, and displayed on an interactive map.</p>
+<p><a href="./earthquakes">View Earthquake Visualization →</a></p>
+<h3 id="2-weather-forecast-chart" tabindex="-1"><a class="observablehq-header-anchor" href="#2-weather-forecast-chart">2. Weather Forecast Chart</a></h3>
+<p>Weather forecast data fetched from the National Weather Service, processed into a clean JSON structure, and displayed as a temperature chart.</p>
+<p><a href="./weather">View Weather Forecast →</a></p>
+<h3 id="3-countries-data-dashboard" tabindex="-1"><a class="observablehq-header-anchor" href="#3-countries-data-dashboard">3. Countries Data Dashboard</a></h3>
+<p>Country data aggregated, sorted, and grouped by region with interactive tables and charts.</p>
+<p><a href="./countries">View Countries Dashboard →</a></p>
+<hr>
+<h2 id="file-structure" tabindex="-1"><a class="observablehq-header-anchor" href="#file-structure">File Structure</a></h2>
+<pre><code>src/
+├── index.md              # This page
+├── earthquakes.md        # Earthquake visualization
+├── weather.md            # Weather forecast chart
+├── countries.md          # Countries dashboard
+└── data/
+    ├── earthquakes.csv.js    # Data loader: outputs CSV
+    ├── weather.json.js       # Data loader: outputs JSON
+    └── countries.json.js     # Data loader: outputs JSON
+</code></pre>
+<h2 id="key-concepts" tabindex="-1"><a class="observablehq-header-anchor" href="#key-concepts">Key Concepts</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data Loaders</strong></td>
+<td>Scripts ending in <code>.ext.js</code> that output static files</td>
+</tr>
+<tr>
+<td><strong>FileAttachment</strong></td>
+<td>Load processed data in your visualizations</td>
+</tr>
+<tr>
+<td><strong>Build-time execution</strong></td>
+<td>Loaders run once during build, not per-request</td>
+</tr>
+<tr>
+<td><strong>stdout output</strong></td>
+<td>Data loaders write to stdout, logs to stderr</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>Built with Observable Framework</em></p>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="next" href="./countries"><span>Countries Data Dashboard</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-03-04T20:06:18">Mar 4, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>

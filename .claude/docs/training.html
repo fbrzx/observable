@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing & CRM Data Engineering — Training Course</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #1e2430;
+    --border-bright: #2a3344;
+    --text: #c8d0dc;
+    --text-dim: #5a6478;
+    --text-bright: #edf2f8;
+    --accent: #4a9eff;
+    --accent-dim: #1a3a5c;
+    --green: #2dcc7a;
+    --green-dim: #0d2e1c;
+    --red: #ff4a6b;
+    --red-dim: #2e0d18;
+    --amber: #f5a623;
+    --amber-dim: #2e1f06;
+    --purple: #9b6dff;
+    --purple-dim: #1c1230;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --serif: 'IBM Plex Serif', serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 0 40px;
+    background: linear-gradient(180deg, #0d1117 0%, var(--bg) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(74,158,255,0.025) 80px,
+      rgba(74,158,255,0.025) 81px
+    );
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+  }
+  .header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--text-bright);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-family: var(--mono);
+    margin-top: 20px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .header-sub span { color: var(--text); }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,12,16,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+  }
+  .nav a {
+    display: block;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav a:hover { color: var(--text-bright); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* MODULE */
+  .module {
+    border-top: 1px solid var(--border);
+    padding: 64px 0 0;
+    margin-top: 64px;
+  }
+  .module:first-child { margin-top: 48px; }
+
+  .module-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .module-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    padding: 4px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+  }
+  .module-title-block h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--text-bright);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .module-title-block .module-tagline {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* JOURNEY STRIP */
+  .journey {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--purple);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .journey-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--purple);
+    white-space: nowrap;
+  }
+  .journey-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* SECTION WITHIN MODULE */
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* PROSE */
+  p { margin-bottom: 16px; color: var(--text); line-height: 1.75; }
+  p:last-child { margin-bottom: 0; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  .code-label {
+    padding: 8px 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .code-label.bad {
+    background: var(--red-dim);
+    color: var(--red);
+    border-bottom-color: rgba(255,74,107,0.2);
+  }
+  .code-label.good {
+    background: var(--green-dim);
+    color: var(--green);
+    border-bottom-color: rgba(45,204,122,0.2);
+  }
+  .code-label.neutral {
+    background: var(--surface2);
+    color: var(--text-dim);
+  }
+  .code-label.result {
+    background: var(--amber-dim);
+    color: var(--amber);
+    border-bottom-color: rgba(245,166,35,0.2);
+  }
+  .code-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.8;
+  }
+  pre {
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    overflow-x: auto;
+    color: var(--text);
+    tab-size: 2;
+  }
+  .comment { color: var(--text-dim); font-style: italic; }
+  .kw { color: #7eb6ff; }
+  .fn { color: #a78bfa; }
+  .str { color: #86efac; }
+  .num { color: var(--amber); }
+  .bad-val { color: var(--red); font-weight: 600; }
+  .good-val { color: var(--green); font-weight: 600; }
+  .highlight { background: rgba(74,158,255,0.12); padding: 1px 3px; border-radius: 2px; }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-left-width: 3px;
+    border-left-style: solid;
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .callout-warn {
+    background: var(--red-dim);
+    border-left-color: var(--red);
+    color: #ffb3c0;
+  }
+  .callout-tip {
+    background: var(--accent-dim);
+    border-left-color: var(--accent);
+    color: #a8c8f0;
+  }
+  .callout-rule {
+    background: var(--amber-dim);
+    border-left-color: var(--amber);
+    color: #f5d49a;
+  }
+  .callout-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.8;
+  }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+  th {
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-bright);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface); }
+  td.good { color: var(--green); }
+  td.bad { color: var(--red); }
+  td.accent { color: var(--accent); }
+
+  /* FUNNEL VIZ */
+  .funnel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .funnel-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  .funnel-row:last-child { margin-bottom: 0; }
+  .funnel-stage {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
+    width: 130px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .funnel-bar-wrap {
+    flex: 1;
+    height: 22px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .funnel-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+  }
+  .funnel-rate {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    width: 90px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  /* MENTAL MODEL */
+  .chain {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 2;
+    color: var(--text);
+  }
+  .chain-step {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .chain-arrow {
+    color: var(--text-dim);
+    font-size: 14px;
+    padding-left: 8px;
+  }
+  .chain-label { color: var(--accent); font-weight: 600; }
+  .chain-desc { color: var(--text-dim); font-size: 11px; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; margin: 16px 0; }
+  .checklist li {
+    padding: 8px 0 8px 28px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    font-size: 13.5px;
+    color: var(--text);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '□';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 16px;
+    font-family: var(--mono);
+    line-height: 1;
+    top: 10px;
+  }
+  .checklist li strong {
+    color: var(--text-bright);
+    display: block;
+    font-size: 13px;
+    font-family: var(--mono);
+    margin-bottom: 2px;
+  }
+  .checklist li span { font-size: 12px; color: var(--text-dim); }
+
+  /* ATTRIBUTION CARDS */
+  .attr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  @media (max-width: 600px) { .attr-grid { grid-template-columns: 1fr; } }
+  .attr-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .attr-card-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 6px;
+  }
+  .attr-card-desc { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; margin-bottom: 8px; }
+  .attr-card-use { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+  .attr-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0 4px;
+    gap: 2px;
+  }
+  .attr-seg { height: 100%; border-radius: 2px; }
+
+  /* SUMMARY CARD */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  @media (max-width: 600px) { .summary-grid { grid-template-columns: 1fr; } }
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+  }
+  .summary-card .sc-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .summary-card .sc-value {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+  }
+  .summary-card .sc-sub { font-size: 12px; color: var(--text-dim); }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 32px;
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* INLINE CODE */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+    border-left: 2px solid var(--border-bright);
+    margin: 20px 0;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 16px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .timeline-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .timeline-event { font-size: 13.5px; color: var(--text); }
+
+  /* SCROLL FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">Training Course · v1.0</div>
+    <h1>Marketing & CRM<br><em>Data Engineering</em></h1>
+    <p style="color: var(--text-dim); font-size: 14px; margin-top: 12px; max-width: 540px;">
+      A practitioner's guide to building correct, fast, and honest marketing data pipelines. 
+      Every module is grounded in real user journey data and warehouse-ready SQL.
+    </p>
+    <div class="header-sub">
+      <div>Modules <span>7</span></div>
+      <div>Estimated time <span>~45 min</span></div>
+      <div>Dialect <span>BigQuery / Snowflake compatible</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#m1">M1 · Grain</a>
+    <a href="#m2">M2 · Funnel</a>
+    <a href="#m3">M3 · Attribution</a>
+    <a href="#m4">M4 · Time</a>
+    <a href="#m5">M5 · Quality</a>
+    <a href="#m6">M6 · Visualisation</a>
+    <a href="#m7">M7 · QA Checklist</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ─── MODULE 1 ─────────────────────────────────────────── -->
+  <section class="module fade-in" id="m1">
+    <div class="module-header">
+      <div class="module-num">M 01</div>
+      <div class="module-title-block">
+        <h2>Grain — What Does One Row Actually Mean?</h2>
+        <div class="module-tagline">The root cause of most incorrect marketing numbers</div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <div class="journey-label">User Journey</div>
+      <div class="journey-text">
+        A person sees a Facebook ad → clicks it → lands on a product page → fills a lead form → gets called by sales → buys. One journey. Multiple tables. Multiple grains.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Data Trail — Four Tables, Four Grains</div>
+      <p>Every action the user takes lands in a different table at a different grain. The key is understanding each table represents the same person at different points in their journey.</p>
+
+      <div class="code-block">
+        <div class="code-label neutral"><div class="dot"></div>Data Tables — One Journey, Four Grains</div>
+        <pre><span class="comment">-- impression_events  (grain = one ad impression)</span>
+user_id │ timestamp               │ campaign_id │ channel
+u_001   │ 2025-01-10 09:14:22 UTC │ camp_77     │ facebook
+u_001   │ 2025-01-10 11:02:01 UTC │ camp_77     │ facebook   <span class="comment">← same user, 2nd impression</span>
+<span class="comment">-- 14 total impressions for u_001 on camp_77</span>
+
+<span class="comment">-- click_events  (grain = one click)</span>
+user_id │ timestamp               │ campaign_id │ landing_page
+u_001   │ 2025-01-10 09:14:35 UTC │ camp_77     │ /products/shoes
+
+<span class="comment">-- lead_events  (grain = one form submit)</span>
+user_id │ timestamp               │ form_id  │ campaign_id
+u_001   │ 2025-01-10 09:17:01 UTC │ form_12  │ camp_77
+
+<span class="comment">-- deals  (grain = one closed deal)</span>
+user_id │ close_date  │ revenue │ campaign_id
+u_001   │ 2025-01-28  │ £249    │ camp_77</pre>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-title">⚠ The Trap</div>
+        If you JOIN <code>impression_events</code> directly to <code>deals</code>, u_001's 14 impressions multiply against £249 revenue. Your pipeline reports <strong>£3,486</strong> instead of <strong>£249</strong>. SQL runs without error. The number is completely wrong.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">❌ The Broken Join</div>
+
+      <div class="code-block">
+        <div class="code-label bad"><div class="dot"></div>WRONG — Direct join across incompatible grains</div>
+        <pre><span class="kw">SELECT</span>
+    i.user_id,
+    i.campaign_id,
+    <span class="kw">SUM</span>(d.revenue)  <span class="comment">AS revenue  ← £249 × 14 impressions = <span class="bad-val">£3,486</span></span>
+<span class="kw">FROM</span> impression_events i
+<span class="kw">LEFT JOIN</span> deals d
+    <span class="kw">ON</span> i.user_id     = d.user_id
+    <span class="kw">AND</span> i.campaign_id = d.campaign_id
+<span class="kw">GROUP BY</span> 1, 2</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label result"><div class="dot"></div>Result — Silently Wrong</div>
+        <pre>user_id │ campaign_id │ revenue
+u_001   │ camp_77     │ <span class="bad-val">3,486.00</span>   ← should be £249</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">✅ Fix 1 — Aggregate to Matching Grain First</div>
+      <p>Resolve each table to <code>user_id + campaign_id</code> grain in a CTE, then join them. Both sides of the join now have exactly one row per user per campaign.</p>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>CORRECT — Deduplicate before joining</div>
+        <pre><span class="kw">WITH</span> user_impressions <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        user_id,
+        campaign_id,
+        <span class="kw">COUNT</span>(*)        <span class="kw">AS</span> impression_count,
+        <span class="kw">MIN</span>(timestamp)  <span class="kw">AS</span> first_seen_at,
+        <span class="kw">MAX</span>(timestamp)  <span class="kw">AS</span> last_seen_at
+    <span class="kw">FROM</span> impression_events
+    <span class="kw">GROUP BY</span> user_id, campaign_id  <span class="comment">← grain = one row per user+campaign</span>
+),
+
+user_deals <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        user_id,
+        campaign_id,
+        <span class="kw">SUM</span>(revenue)    <span class="kw">AS</span> total_revenue,
+        <span class="kw">COUNT</span>(*)        <span class="kw">AS</span> deal_count
+    <span class="kw">FROM</span> deals
+    <span class="kw">GROUP BY</span> user_id, campaign_id  <span class="comment">← same grain — safe to join</span>
+)
+
+<span class="kw">SELECT</span>
+    ui.campaign_id,
+    <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> ui.user_id)      <span class="kw">AS</span> reached_users,
+    <span class="kw">SUM</span>(ui.impression_count)         <span class="kw">AS</span> total_impressions,
+    <span class="kw">SUM</span>(ud.total_revenue)            <span class="kw">AS</span> revenue,
+    <span class="kw">SUM</span>(ud.deal_count)               <span class="kw">AS</span> deals
+<span class="kw">FROM</span> user_impressions ui
+<span class="kw">LEFT JOIN</span> user_deals ud
+    <span class="kw">ON</span> ui.user_id     = ud.user_id
+    <span class="kw">AND</span> ui.campaign_id = ud.campaign_id
+<span class="kw">GROUP BY</span> ui.campaign_id</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label result"><div class="dot"></div>Result — Correct</div>
+        <pre>campaign_id │ reached_users │ total_impressions │ revenue │ deals
+camp_77     │ 3,847         │ 51,203            │ <span class="good-val">5,478</span>   │ 22</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">✅ Fix 2 — Build Stable Intermediate Tables at Pipeline Time</div>
+      <p>Never recompute grain resolution in dashboard queries. Build these once in your pipeline.</p>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>Pipeline models — pre-aggregated fact tables</div>
+        <pre><span class="comment">-- fact_daily_channel: one row per day per channel</span>
+<span class="kw">CREATE TABLE</span> fact_daily_channel <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+    <span class="fn">DATE</span>(timestamp)             <span class="kw">AS</span> report_date,
+    channel,
+    <span class="kw">COUNT</span>(*)                    <span class="kw">AS</span> impressions,
+    <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> session_id)  <span class="kw">AS</span> sessions,
+    <span class="kw">SUM</span>(spend)                  <span class="kw">AS</span> spend
+<span class="kw">FROM</span> impression_events
+<span class="kw">GROUP BY</span> 1, 2;
+
+<span class="comment">-- fact_leads_daily: one row per day per campaign</span>
+<span class="kw">CREATE TABLE</span> fact_leads_daily <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+    <span class="fn">DATE</span>(submitted_at)          <span class="kw">AS</span> report_date,
+    campaign_id,
+    <span class="kw">COUNT</span>(*)                    <span class="kw">AS</span> leads,
+    <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> user_id)     <span class="kw">AS</span> unique_leads
+<span class="kw">FROM</span> lead_events
+<span class="kw">WHERE</span> is_test = <span class="kw">FALSE</span>         <span class="comment">← exclusion rule documented here</span>
+  <span class="kw">AND</span> is_bot  = <span class="kw">FALSE</span>
+<span class="kw">GROUP BY</span> 1, 2;</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">✅ Fix 3 — Multi-Grain Rollup Across Fact Tables</div>
+
+      <div class="code-block">
+        <div class="code-label bad"><div class="dot"></div>WRONG — Joining all raw tables in one query</div>
+        <pre><span class="kw">SELECT</span>
+    <span class="fn">DATE</span>(i.timestamp), i.campaign_id,
+    <span class="kw">COUNT</span>(i.event_id)  <span class="kw">AS</span> impressions,
+    <span class="kw">COUNT</span>(l.lead_id)   <span class="kw">AS</span> leads,    <span class="comment">← multiplied by impression rows</span>
+    <span class="kw">SUM</span>(d.revenue)     <span class="kw">AS</span> revenue   <span class="comment">← multiplied further</span>
+<span class="kw">FROM</span> impression_events i
+<span class="kw">LEFT JOIN</span> lead_events l <span class="kw">ON</span> i.user_id = l.user_id <span class="kw">AND</span> i.campaign_id = l.campaign_id
+<span class="kw">LEFT JOIN</span> deals d       <span class="kw">ON</span> i.user_id = d.user_id <span class="kw">AND</span> i.campaign_id = d.campaign_id
+<span class="kw">GROUP BY</span> 1, 2</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>CORRECT — Join pre-aggregated fact tables at matching grain</div>
+        <pre><span class="kw">WITH</span> daily_impressions <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> report_date, campaign_id, impressions, spend
+    <span class="kw">FROM</span> fact_daily_campaign          <span class="comment">← already day+campaign grain</span>
+),
+daily_leads <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> report_date, campaign_id, leads
+    <span class="kw">FROM</span> fact_leads_daily             <span class="comment">← already day+campaign grain</span>
+),
+daily_revenue <span class="kw">AS</span> (
+    <span class="comment">-- Revenue joins on close_date, not campaign run date</span>
+    <span class="comment">-- This is the attribution window decision made explicit in SQL</span>
+    <span class="kw">SELECT</span>
+        <span class="fn">DATE</span>(close_date)  <span class="kw">AS</span> report_date,
+        campaign_id,
+        <span class="kw">SUM</span>(revenue)      <span class="kw">AS</span> revenue,
+        <span class="kw">COUNT</span>(*)          <span class="kw">AS</span> deals_closed
+    <span class="kw">FROM</span> deals
+    <span class="kw">GROUP BY</span> 1, 2
+)
+
+<span class="kw">SELECT</span>
+    di.report_date,
+    di.campaign_id,
+    di.impressions,
+    di.spend,
+    <span class="fn">COALESCE</span>(dl.leads,           <span class="num">0</span>) <span class="kw">AS</span> leads,
+    <span class="fn">COALESCE</span>(dr.revenue,         <span class="num">0</span>) <span class="kw">AS</span> revenue,
+    <span class="fn">COALESCE</span>(dr.deals_closed,    <span class="num">0</span>) <span class="kw">AS</span> deals,
+    <span class="fn">SAFE_DIVIDE</span>(di.spend, dl.leads)      <span class="kw">AS</span> cpl,
+    <span class="fn">SAFE_DIVIDE</span>(dr.revenue, di.spend)    <span class="kw">AS</span> roas
+<span class="kw">FROM</span> daily_impressions di
+<span class="kw">LEFT JOIN</span> daily_leads   dl <span class="kw">ON</span> di.report_date = dl.report_date <span class="kw">AND</span> di.campaign_id = dl.campaign_id
+<span class="kw">LEFT JOIN</span> daily_revenue dr <span class="kw">ON</span> di.report_date = dr.report_date <span class="kw">AND</span> di.campaign_id = dr.campaign_id
+<span class="kw">ORDER BY</span> di.report_date <span class="kw">DESC</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label result"><div class="dot"></div>Result — Revenue lag is now visible in the data</div>
+        <pre>report_date │ campaign_id │ spend  │ leads │ revenue │ cpl   │ roas
+2025-01-10  │ camp_77     │ 384.00 │ 27    │ 0.00    │ 14.22 │ 0.00
+2025-01-11  │ camp_77     │ 356.00 │ 31    │ 249.00  │ 11.48 │ 0.70
+2025-01-28  │ camp_77     │ 0.00   │ 0     │ <span class="good-val">1,247</span>   │ null  │ null
+                                            <span class="comment">↑ deals from Jan 10 leads close here — 18-day lag</span></pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">✅ Fix 4 — Deduplication with ROW_NUMBER()</div>
+      <p>A user clicks two campaigns in the same session. Without deduplication they appear as a lead in both — inflating counts and distorting CPL.</p>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>CORRECT — First-touch attribution deduplication</div>
+        <pre><span class="kw">WITH</span> first_touch <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        user_id,
+        campaign_id,
+        <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (
+            <span class="kw">PARTITION BY</span> user_id      <span class="comment">← per person</span>
+            <span class="kw">ORDER BY</span> timestamp <span class="kw">ASC</span>    <span class="comment">← earliest click wins</span>
+        ) <span class="kw">AS</span> touch_rank
+    <span class="kw">FROM</span> click_events
+),
+attributed_lead <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> user_id, campaign_id
+    <span class="kw">FROM</span> first_touch
+    <span class="kw">WHERE</span> touch_rank = <span class="num">1</span>        <span class="comment">← one campaign per user</span>
+)
+
+<span class="kw">SELECT</span>
+    al.campaign_id,
+    <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> l.user_id) <span class="kw">AS</span> unique_leads
+<span class="kw">FROM</span> lead_events l
+<span class="kw">INNER JOIN</span> attributed_lead al <span class="kw">ON</span> l.user_id = al.user_id
+<span class="kw">GROUP BY</span> 1</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label result"><div class="dot"></div>Result — u_001 counted once, in the right campaign</div>
+        <pre>camp_77: <span class="good-val">298</span> unique leads  ← u_001 attributed here (first touch)
+camp_83: <span class="good-val">271</span> unique leads  ← u_001 removed from this count</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">✅ Fix 5 — Safe Rollups Up the Hierarchy</div>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>CORRECT — Rolling up from clean daily grain</div>
+        <pre><span class="comment">-- Weekly rollup</span>
+<span class="kw">SELECT</span>
+    <span class="fn">DATE_TRUNC</span>(<span class="str">'week'</span>, report_date)       <span class="kw">AS</span> week_start,
+    campaign_id,
+    <span class="kw">SUM</span>(impressions)                      <span class="kw">AS</span> impressions,
+    <span class="kw">SUM</span>(spend)                            <span class="kw">AS</span> spend,
+    <span class="kw">SUM</span>(leads)                            <span class="kw">AS</span> leads,
+    <span class="fn">SAFE_DIVIDE</span>(<span class="kw">SUM</span>(spend), <span class="kw">SUM</span>(leads))  <span class="kw">AS</span> cpl,
+    <span class="fn">SAFE_DIVIDE</span>(<span class="kw">SUM</span>(revenue), <span class="kw">SUM</span>(spend)) <span class="kw">AS</span> roas
+<span class="kw">FROM</span> fact_daily_campaign_enriched
+<span class="kw">GROUP BY</span> 1, 2;
+
+<span class="comment">-- Channel rollup (strip campaign, aggregate up)</span>
+<span class="kw">SELECT</span>
+    <span class="fn">DATE_TRUNC</span>(<span class="str">'month'</span>, report_date)      <span class="kw">AS</span> month_start,
+    channel,
+    <span class="kw">SUM</span>(spend)                            <span class="kw">AS</span> spend,
+    <span class="kw">SUM</span>(leads)                            <span class="kw">AS</span> leads,
+    <span class="fn">SAFE_DIVIDE</span>(<span class="kw">SUM</span>(spend), <span class="kw">SUM</span>(leads))  <span class="kw">AS</span> cpl
+<span class="kw">FROM</span> fact_daily_campaign_enriched
+<span class="kw">GROUP BY</span> 1, 2;</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Mental Model</div>
+      <div class="chain">
+        <div class="chain-step"><span class="chain-label">Raw events</span><span class="chain-desc">millions of rows, immutable, never query directly</span></div>
+        <div class="chain-step"><span class="chain-arrow">↓ GROUP BY user_id + campaign_id</span></div>
+        <div class="chain-step"><span class="chain-label">User-campaign CTEs</span><span class="chain-desc">one row per person per campaign — safe to join</span></div>
+        <div class="chain-step"><span class="chain-arrow">↓ GROUP BY date + campaign_id</span></div>
+        <div class="chain-step"><span class="chain-label">fact_daily_campaign</span><span class="chain-desc">one row per day per campaign — the core fact table</span></div>
+        <div class="chain-step"><span class="chain-arrow">↓ GROUP BY week / month / channel</span></div>
+        <div class="chain-step"><span class="chain-label">Dashboard rollups</span><span class="chain-desc">small, fast, correct — what the UI actually queries</span></div>
+      </div>
+      <div class="callout callout-rule">
+        <div class="callout-title">The Rule</div>
+        Every time you skip a step in that chain and jump directly from raw events to a rollup, you're gambling on grain integrity. SQL won't warn you. The numbers will just be wrong.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MODULE 2 ─────────────────────────────────────────── -->
+  <section class="module fade-in" id="m2">
+    <div class="module-header">
+      <div class="module-num">M 02</div>
+      <div class="module-title-block">
+        <h2>The Funnel as Data</h2>
+        <div class="module-tagline">Tracing a cohort through each stage — and understanding revenue lag</div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <div class="journey-label">User Journey</div>
+      <div class="journey-text">
+        The same person, but now we want to see where the entire <em>cohort</em> drops off — and why revenue from January campaigns can still be arriving in March.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Funnel as a Data Table</div>
+
+      <div class="funnel">
+        <div class="funnel-row">
+          <div class="funnel-stage">Impressions</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#1a3a5c;">50,000</div></div>
+          <div class="funnel-rate" style="color:var(--text-dim)">—</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage">Clicks</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:2.4%;background:#2a5a8c;">1,200</div></div>
+          <div class="funnel-rate">CTR 2.4%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage">Visits</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:2.1%;background:#3a7aaa;">1,050</div></div>
+          <div class="funnel-rate">−12.5%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage">Leads</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.62%;background:var(--accent);">310</div></div>
+          <div class="funnel-rate">29.5%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage">Opportunities</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.17%;background:var(--purple);">87</div></div>
+          <div class="funnel-rate">28.1%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-stage">Closed-Won</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.044%;min-width:40px;background:var(--green);">22</div></div>
+          <div class="funnel-rate">25.3%</div>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card"><div class="sc-label">Spend</div><div class="sc-value">£4,800</div></div>
+        <div class="summary-card"><div class="sc-label">CPL</div><div class="sc-value">£15.48</div><div class="sc-sub">4,800 / 310</div></div>
+        <div class="summary-card"><div class="sc-label">CAC</div><div class="sc-value">£218</div><div class="sc-sub">4,800 / 22</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Revenue Lag Problem</div>
+      <p>ROAS is the most commonly mis-measured metric in marketing data because revenue and spend live on different timelines.</p>
+
+      <div class="code-block">
+        <div class="code-label result"><div class="dot"></div>The lag in raw data</div>
+        <pre>Jan spend:  £4,800  booked immediately
+Jan rev:    £2,249  only 9 deals closed in-month
+
+Feb rev:    £3,229  13 more deals from Jan leads close late
+                    (avg sales cycle = 18 days)
+
+<span class="comment">-- ROAS measured in January only: <span class="bad-val">0.47x</span>  ← looks like a disaster</span>
+<span class="comment">-- ROAS at 60-day window:          <span class="good-val">1.14x</span>  ← actual picture</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>SQL — Windowed ROAS with configurable attribution window</div>
+        <pre><span class="kw">WITH</span> campaign_spend <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> campaign_id, <span class="kw">SUM</span>(spend) <span class="kw">AS</span> total_spend,
+           <span class="kw">MIN</span>(report_date) <span class="kw">AS</span> campaign_start
+    <span class="kw">FROM</span> fact_daily_campaign
+    <span class="kw">GROUP BY</span> campaign_id
+),
+windowed_revenue <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        l.campaign_id,
+        <span class="kw">SUM</span>(d.revenue) <span class="kw">AS</span> revenue_30d,
+        <span class="kw">COUNT</span>(d.deal_id) <span class="kw">AS</span> deals_30d
+    <span class="kw">FROM</span> lead_events l
+    <span class="kw">INNER JOIN</span> deals d <span class="kw">ON</span> l.user_id = d.user_id
+    <span class="kw">WHERE</span>
+        <span class="comment">-- Only count revenue within 30 days of the lead</span>
+        d.close_date <span class="kw">BETWEEN</span> l.submitted_at
+                     <span class="kw">AND</span> <span class="fn">DATE_ADD</span>(l.submitted_at, <span class="kw">INTERVAL</span> <span class="num">30</span> <span class="kw">DAY</span>)
+    <span class="kw">GROUP BY</span> l.campaign_id
+)
+
+<span class="kw">SELECT</span>
+    cs.campaign_id,
+    cs.total_spend,
+    wr.revenue_30d,
+    wr.deals_30d,
+    <span class="fn">SAFE_DIVIDE</span>(wr.revenue_30d, cs.total_spend) <span class="kw">AS</span> roas_30d
+<span class="kw">FROM</span> campaign_spend cs
+<span class="kw">LEFT JOIN</span> windowed_revenue wr <span class="kw">ON</span> cs.campaign_id = wr.campaign_id</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MODULE 3 ─────────────────────────────────────────── -->
+  <section class="module fade-in" id="m3">
+    <div class="module-header">
+      <div class="module-num">M 03</div>
+      <div class="module-title-block">
+        <h2>Attribution — Pick One and Stick to It</h2>
+        <div class="module-tagline">The same journey produces four different stories depending on your model</div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <div class="journey-label">User Journey</div>
+      <div class="journey-text">
+        Jan 3 → organic social · Jan 7 → paid search · Jan 9 → email · Jan 11 → display retargeting · Jan 12 → buys £300
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Four Models, Four Realities</div>
+
+      <div class="attr-grid">
+        <div class="attr-card">
+          <div class="attr-card-title">First-Touch</div>
+          <div class="attr-bar">
+            <div class="attr-seg" style="width:100%;background:var(--accent);"></div>
+          </div>
+          <div class="attr-card-desc">All credit to Social. Paid Search, Email, Display get nothing.</div>
+          <div class="attr-card-use">Good for: brand awareness measurement</div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-title">Last-Touch</div>
+          <div class="attr-bar">
+            <div class="attr-seg" style="width:100%;background:var(--purple);"></div>
+          </div>
+          <div class="attr-card-desc">All credit to Display. The top-of-funnel channels look worthless.</div>
+          <div class="attr-card-use">Good for: direct response campaigns</div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-title">Linear</div>
+          <div class="attr-bar">
+            <div class="attr-seg" style="width:25%;background:#4a9eff;margin-right:2px"></div>
+            <div class="attr-seg" style="width:25%;background:#4a9eff;margin-right:2px"></div>
+            <div class="attr-seg" style="width:25%;background:#4a9eff;margin-right:2px"></div>
+            <div class="attr-seg" style="width:25%;background:#4a9eff;"></div>
+          </div>
+          <div class="attr-card-desc">£75 to each channel. Equal split across all touches.</div>
+          <div class="attr-card-use">Good for: multi-touch journey analysis</div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-title">Time-Decay</div>
+          <div class="attr-bar">
+            <div class="attr-seg" style="width:6%;background:var(--green);margin-right:2px"></div>
+            <div class="attr-seg" style="width:17%;background:var(--green);margin-right:2px"></div>
+            <div class="attr-seg" style="width:30%;background:var(--green);margin-right:2px"></div>
+            <div class="attr-seg" style="width:47%;background:var(--green);"></div>
+          </div>
+          <div class="attr-card-desc">Social £18, Search £52, Email £89, Display £141.</div>
+          <div class="attr-card-use">Good for: long B2B sales cycles</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Operational Consequence</div>
+      <div class="callout callout-warn">
+        <div class="callout-title">⚠ Real Business Impact</div>
+        If you run last-touch attribution, your Social team looks useless and your Display team looks like heroes. You cut Social budget. Acquisition collapses — nobody was ever discovering you in the first place. The model was hiding the top-of-funnel contribution the entire time.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">SQL — Time-Decay Attribution</div>
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>Time-decay credit calculation</div>
+        <pre><span class="kw">WITH</span> touches <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        user_id,
+        channel,
+        campaign_id,
+        timestamp,
+        <span class="comment">-- Days before conversion (0 = day of purchase)</span>
+        <span class="fn">DATE_DIFF</span>(
+            conversion_date,
+            <span class="fn">DATE</span>(timestamp),
+            <span class="kw">DAY</span>
+        )                        <span class="kw">AS</span> days_before_conv
+    <span class="kw">FROM</span> click_events
+    <span class="kw">INNER JOIN</span> conversions <span class="kw">USING</span> (user_id)
+),
+decay_weights <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        user_id, channel, campaign_id,
+        <span class="comment">-- Half-life decay: each day back = 0.5x less credit</span>
+        <span class="fn">POW</span>(<span class="num">0.5</span>, days_before_conv / <span class="num">7.0</span>) <span class="kw">AS</span> weight
+    <span class="kw">FROM</span> touches
+),
+normalised <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        user_id, channel, campaign_id,
+        weight / <span class="kw">SUM</span>(weight) <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> user_id) <span class="kw">AS</span> credit_share
+    <span class="kw">FROM</span> decay_weights
+)
+
+<span class="kw">SELECT</span>
+    n.channel,
+    n.campaign_id,
+    <span class="kw">SUM</span>(n.credit_share * c.revenue) <span class="kw">AS</span> attributed_revenue
+<span class="kw">FROM</span> normalised n
+<span class="kw">INNER JOIN</span> conversions c <span class="kw">USING</span> (user_id)
+<span class="kw">GROUP BY</span> 1, 2</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MODULE 4 ─────────────────────────────────────────── -->
+  <section class="module fade-in" id="m4">
+    <div class="module-header">
+      <div class="module-num">M 04</div>
+      <div class="module-title-block">
+        <h2>Time — When the Same Number Means Different Things</h2>
+        <div class="module-tagline">UTC, timezones, and the week-start convention that rewrites history</div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <div class="journey-label">User Journey</div>
+      <div class="journey-text">
+        A campaign runs over a weekend. A user submits a lead at 23:45 Pacific Time on Sunday Jan 12. Depending on your timezone convention, that lead appears on Sunday or Monday.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Timezone Split</div>
+      <div class="code-block">
+        <div class="code-label result"><div class="dot"></div>Same event, two different "days" depending on storage convention</div>
+        <pre>User submits form at 23:45 PT on Sunday Jan 12
+→ UTC equivalent: 07:45 Monday Jan 13
+
+Dashboard A (stores local US time):  lead on Sunday 12th
+Dashboard B (stores UTC):            lead on Monday 13th
+
+Week-on-week Sunday comparison:
+  Dashboard A: <span class="bad-val">47</span> leads
+  Dashboard B: <span class="bad-val">39</span> leads  ← 8 leads silently moved to Monday
+
+Nobody changed the data. The timezone convention changed the story.</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">SQL — Correct Timezone Handling</div>
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>UTC ingest + display timezone as derived field</div>
+        <pre><span class="comment">-- At ingest: always store UTC</span>
+<span class="kw">INSERT INTO</span> lead_events (user_id, submitted_at_utc, ...)
+<span class="kw">VALUES</span> (
+    <span class="str">'u_001'</span>,
+    <span class="fn">TIMESTAMP</span>(<span class="str">'2025-01-13 07:45:00'</span>),  <span class="comment">← UTC stored</span>
+    ...
+);
+
+<span class="comment">-- At query time: derive local display fields</span>
+<span class="kw">SELECT</span>
+    user_id,
+    submitted_at_utc,
+    <span class="fn">DATETIME</span>(submitted_at_utc, <span class="str">'America/Los_Angeles'</span>) <span class="kw">AS</span> submitted_at_pt,
+    <span class="fn">DATE</span>(<span class="fn">DATETIME</span>(submitted_at_utc, <span class="str">'America/Los_Angeles'</span>)) <span class="kw">AS</span> report_date_pt,
+    <span class="fn">DATE</span>(submitted_at_utc)                                  <span class="kw">AS</span> report_date_utc
+<span class="kw">FROM</span> lead_events
+
+<span class="comment">-- Lock your reporting timezone in a config table</span>
+<span class="comment">-- NEVER compute report_date inline in 47 different places</span></pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Calendar Day vs Rolling 24h</div>
+      <div class="code-block">
+        <div class="code-label neutral"><div class="dot"></div>Same question, two valid but different answers</div>
+        <pre>Question: "How many leads today?" asked at 14:00 UTC Jan 13
+
+Calendar day:  leads from 00:00–14:00 Jan 13    = <span class="num">31</span>
+Rolling 24h:   leads from 14:00 Jan 12–14:00 13 = <span class="num">58</span>
+
+<span class="comment">-- SQL for rolling 24h</span>
+<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> leads_rolling_24h
+<span class="kw">FROM</span> lead_events
+<span class="kw">WHERE</span> submitted_at_utc >= <span class="fn">TIMESTAMP_SUB</span>(<span class="fn">CURRENT_TIMESTAMP</span>(), <span class="kw">INTERVAL</span> <span class="num">24</span> <span class="kw">HOUR</span>)
+
+<span class="comment">-- SQL for calendar day</span>
+<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> leads_today
+<span class="kw">FROM</span> lead_events
+<span class="kw">WHERE</span> <span class="fn">DATE</span>(submitted_at_utc, <span class="str">'Europe/London'</span>) = <span class="fn">CURRENT_DATE</span>(<span class="str">'Europe/London'</span>)
+
+<span class="comment">-- Both are "correct." They mean completely different things.
+-- Lock the definition before you build the chart.</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MODULE 5 ─────────────────────────────────────────── -->
+  <section class="module fade-in" id="m5">
+    <div class="module-header">
+      <div class="module-num">M 05</div>
+      <div class="module-title-block">
+        <h2>Data Quality — Catching Lies Before They Reach a Stakeholder</h2>
+        <div class="module-tagline">Impossible values, bot traffic, test records, and distribution drift</div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <div class="journey-label">User Journey</div>
+      <div class="journey-text">
+        A bot farm hits your landing page. A developer tests a form. A pixel misfires and logs 9,847 clicks from a campaign that reached 12,600 people. All of this arrives in your pipeline looking like real data.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Impossible Values — Hard Reject Rules</div>
+
+      <div class="code-block">
+        <div class="code-label neutral"><div class="dot"></div>The anomaly in raw data</div>
+        <pre>Normal day:
+  impressions: 12,400  │  clicks: 310    │  CTR: <span class="good-val">2.5%</span>
+
+Anomaly day:
+  impressions: 12,600  │  clicks: 9,847  │  CTR: <span class="bad-val">78.1%</span>  ← impossible</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>SQL — Validation layer at ingest</div>
+        <pre><span class="kw">CREATE VIEW</span> validated_daily_campaign <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+    *,
+    <span class="kw">CASE</span>
+        <span class="kw">WHEN</span> clicks > impressions
+            <span class="kw">THEN</span> <span class="str">'HARD_REJECT: clicks exceed impressions'</span>
+        <span class="kw">WHEN</span> spend < <span class="num">0</span>
+            <span class="kw">THEN</span> <span class="str">'HARD_REJECT: negative spend'</span>
+        <span class="kw">WHEN</span> <span class="fn">SAFE_DIVIDE</span>(clicks, impressions) > <span class="num">0.20</span>
+             <span class="kw">AND</span> channel = <span class="str">'display'</span>
+            <span class="kw">THEN</span> <span class="str">'FLAG: CTR exceeds 20% on display'</span>
+        <span class="kw">WHEN</span> clicks > <span class="num">500</span> <span class="kw">AND</span> leads = <span class="num">0</span>
+            <span class="kw">THEN</span> <span class="str">'FLAG: high clicks with zero conversions (bot pattern)'</span>
+        <span class="kw">ELSE</span> <span class="str">'OK'</span>
+    <span class="kw">END</span> <span class="kw">AS</span> quality_flag
+<span class="kw">FROM</span> raw_daily_campaign;
+
+<span class="comment">-- Dashboard queries only consume rows where quality_flag = 'OK'</span>
+<span class="comment">-- Rejected rows land in a monitoring table for review</span></pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Test Campaign Problem</div>
+      <div class="code-block">
+        <div class="code-label neutral"><div class="dot"></div>Contaminated lead table</div>
+        <pre>lead_id │ email                   │ campaign_id │ quality_flag
+l_001   │ real.customer@gmail.com │ camp_77     │ OK
+l_002   │ test@ourcompany.com     │ camp_77     │ <span class="bad-val">INTERNAL_TEST</span>
+l_003   │ qa_bot_42@test.io       │ camp_77     │ <span class="bad-val">QA_AUTOMATION</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>SQL — Documented exclusion rules at the model layer</div>
+        <pre><span class="kw">CREATE VIEW</span> clean_lead_events <span class="kw">AS</span>
+<span class="kw">SELECT</span> *
+<span class="kw">FROM</span> lead_events
+<span class="kw">WHERE</span>
+    <span class="comment">-- Exclude internal test submissions</span>
+    email <span class="kw">NOT LIKE</span> <span class="str">'%@ourcompany.com'</span>
+    <span class="comment">-- Exclude QA automation</span>
+    <span class="kw">AND</span> email <span class="kw">NOT LIKE</span> <span class="str">'%@test.io'</span>
+    <span class="comment">-- Exclude known bot domains (maintained in ref table)</span>
+    <span class="kw">AND</span> <span class="fn">SPLIT</span>(email, <span class="str">'@'</span>)[<span class="kw">OFFSET</span>(<span class="num">1</span>)] <span class="kw">NOT IN</span> (
+        <span class="kw">SELECT</span> domain <span class="kw">FROM</span> ref_known_bot_domains
+    )
+    <span class="comment">-- Flag must be clean</span>
+    <span class="kw">AND</span> is_test = <span class="kw">FALSE</span>
+    <span class="kw">AND</span> is_internal = <span class="kw">FALSE</span>;
+<span class="comment">
+-- Document this view. Every exclusion rule here must have a
+-- corresponding entry in the known_exclusions changelog.</span></pre>
+      </div>
+
+      <div class="callout callout-rule">
+        <div class="callout-title">Rule</div>
+        Never silently drop records. Every exclusion must be documented and the excluded records must be visible in a monitoring table — otherwise you can't tell the difference between "excluded for a known reason" and "missing because the pipeline broke."
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MODULE 6 ─────────────────────────────────────────── -->
+  <section class="module fade-in" id="m6">
+    <div class="module-header">
+      <div class="module-num">M 06</div>
+      <div class="module-title-block">
+        <h2>Visualising Large Datasets Without Lying</h2>
+        <div class="module-tagline">Aggregate first, chart second — the golden layout</div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <div class="journey-label">User Journey</div>
+      <div class="journey-text">
+        90 days of raw daily leads — noisy as hell. Weekends collapse, Mondays spike, bank holidays zero out. A stakeholder asks "are leads trending up or down?" You need to answer honestly without the noise obscuring the signal.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Rolling Averages — SQL</div>
+
+      <div class="code-block">
+        <div class="code-label good"><div class="dot"></div>7-day rolling average to smooth noisy daily signal</div>
+        <pre><span class="kw">SELECT</span>
+    report_date,
+    leads                                            <span class="kw">AS</span> leads_raw,
+    <span class="kw">AVG</span>(leads) <span class="kw">OVER</span> (
+        <span class="kw">ORDER BY</span> report_date
+        <span class="kw">ROWS BETWEEN</span> <span class="num">6</span> <span class="kw">PRECEDING AND CURRENT ROW</span>  <span class="comment">← 7-day window</span>
+    )                                                <span class="kw">AS</span> leads_7d_avg,
+    <span class="kw">AVG</span>(leads) <span class="kw">OVER</span> (
+        <span class="kw">ORDER BY</span> report_date
+        <span class="kw">ROWS BETWEEN</span> <span class="num">27</span> <span class="kw">PRECEDING AND CURRENT ROW</span> <span class="comment">← 28-day window</span>
+    )                                                <span class="kw">AS</span> leads_28d_avg
+<span class="kw">FROM</span> fact_leads_daily
+<span class="kw">ORDER BY</span> report_date</pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">The Golden Layout Pattern</div>
+
+      <div class="code-block">
+        <div class="code-label neutral"><div class="dot"></div>Query architecture for each dashboard layer</div>
+        <pre><span class="comment">-- Layer 1: Top-line KPI  (the answer)</span>
+<span class="kw">SELECT</span>
+    <span class="kw">SUM</span>(leads)                                         <span class="kw">AS</span> total_leads,
+    <span class="fn">SAFE_DIVIDE</span>(<span class="kw">SUM</span>(leads) - <span class="kw">LAG</span>(<span class="kw">SUM</span>(leads))
+        <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> month), <span class="kw">LAG</span>(<span class="kw">SUM</span>(leads))
+        <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> month))                         <span class="kw">AS</span> mom_change
+<span class="kw">FROM</span> fact_leads_daily
+<span class="kw">WHERE</span> report_date >= <span class="fn">DATE_TRUNC</span>(<span class="fn">CURRENT_DATE</span>(), <span class="kw">MONTH</span>);
+
+<span class="comment">-- Layer 2: Trend chart  (the story)</span>
+<span class="comment">-- Only 5 lines max — aggregate by channel, not campaign</span>
+<span class="kw">SELECT</span> report_date, channel, <span class="kw">SUM</span>(leads) <span class="kw">AS</span> leads
+<span class="kw">FROM</span> fact_leads_daily
+<span class="kw">JOIN</span> dim_campaign <span class="kw">USING</span> (campaign_id)
+<span class="kw">GROUP BY</span> 1, 2;
+
+<span class="comment">-- Layer 3: Drill-down table  (the proof)</span>
+<span class="comment">-- All 847 campaigns, filterable, sortable, paginated</span>
+<span class="kw">SELECT</span>
+    campaign_id, campaign_name, channel,
+    <span class="kw">SUM</span>(leads) <span class="kw">AS</span> leads,
+    <span class="fn">SAFE_DIVIDE</span>(<span class="kw">SUM</span>(spend), <span class="kw">SUM</span>(leads)) <span class="kw">AS</span> cpl
+<span class="kw">FROM</span> fact_daily_campaign_enriched
+<span class="kw">WHERE</span> report_date <span class="kw">BETWEEN</span> @start_date <span class="kw">AND</span> @end_date
+<span class="kw">GROUP BY</span> 1, 2, 3
+<span class="kw">ORDER BY</span> leads <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="num">100</span>;  <span class="comment">← paginate server-side</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">The User Journey Through the UI</div>
+        <strong style="color:var(--text-bright);">1. KPI tile</strong> — "are we up or down?" &nbsp;→&nbsp;
+        <strong style="color:var(--text-bright);">2. Trend chart</strong> — "when did it change?" &nbsp;→&nbsp;
+        <strong style="color:var(--text-bright);">3. Filter by channel</strong> — "which channel drove it?" &nbsp;→&nbsp;
+        <strong style="color:var(--text-bright);">4. Sort table by CPL</strong> — "which campaigns are efficient?"
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MODULE 7 ─────────────────────────────────────────── -->
+  <section class="module fade-in" id="m7">
+    <div class="module-header">
+      <div class="module-num">M 07</div>
+      <div class="module-title-block">
+        <h2>Pre-Publish Checklist — The Real Failure Modes</h2>
+        <div class="module-tagline">Each item corresponds to a specific, documented way dashboards break trust</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Checklist</div>
+      <ul class="checklist">
+        <li>
+          <strong>Metrics reconcile with source-of-truth</strong>
+          <span>You ship a dashboard showing £1.2M revenue. Finance's report says £980k. You lose all credibility instantly. Always cross-check against the agreed source of truth within expected tolerance before any stakeholder sees it.</span>
+        </li>
+        <li>
+          <strong>Date range and timezone visible on screen</strong>
+          <span>Stakeholder screenshots your chart for a board deck. Context disappears. Nobody knows it's only 14 days of data in Pacific Time. Always render the date range and timezone label on the chart itself, not just in a filter.</span>
+        </li>
+        <li>
+          <strong>Filters update all dependent visuals</strong>
+          <span>User filters to "UK only." The trend chart updates. The KPI tile doesn't. They make a £2M UK budget decision based on global numbers. Every interactive filter must be wired to every chart that could be affected.</span>
+        </li>
+        <li>
+          <strong>Empty states handled gracefully</strong>
+          <span>No data for selected segment returns a blank white box. Stakeholder assumes the dashboard is broken and stops trusting it. Always render a clear "No data for this filter combination" message — never a silent void.</span>
+        </li>
+        <li>
+          <strong>Fast on large date range</strong>
+          <span>Someone selects "all time." Browser tab hangs for 40 seconds. They never come back. Pre-aggregate in the pipeline so the dashboard query always hits small, fast tables regardless of the date range selected.</span>
+        </li>
+        <li>
+          <strong>Exclusion rules documented and visible</strong>
+          <span>Someone asks "why does your lead count differ from Salesforce?" The answer is test records and bot traffic. If you can't point to a documented exclusion log, you look like you're hiding something — even if you aren't.</span>
+        </li>
+        <li>
+          <strong>Attribution model labelled on every ROAS/CPL figure</strong>
+          <span>Last-touch ROAS of 3.2x and linear ROAS of 1.8x are both "correct." Presenting one without labelling the model is how marketing and finance end up in a room arguing about which number is real.</span>
+        </li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section">
+      <div class="section-title">The Thread Connecting All Modules</div>
+      <div class="callout callout-tip">
+        <div class="callout-title">Core Principle</div>
+        Every module is really about the same thing. One real person took a journey, left a trail of data, and your job is to represent that trail <strong style="color:var(--text-bright)">honestly and efficiently</strong> — without letting technical artefacts (grain mismatches, timezone bugs, bot traffic, attribution choices) distort the story into something that never happened.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Quick Reference — All Modules</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th>Core Rule</th>
+              <th>SQL Technique</th>
+              <th>Warning Sign</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="accent">M1 · Grain</td>
+              <td>Match grain before joining. Never skip a level.</td>
+              <td>CTEs with GROUP BY before JOIN</td>
+              <td class="bad">Revenue × impression count</td>
+            </tr>
+            <tr>
+              <td class="accent">M2 · Funnel</td>
+              <td>Annotate attribution window on every ROAS figure.</td>
+              <td>DATE_DIFF windowed joins</td>
+              <td class="bad">Jan ROAS looks negative</td>
+            </tr>
+            <tr>
+              <td class="accent">M3 · Attribution</td>
+              <td>Pick one model, version it, never silently change it.</td>
+              <td>ROW_NUMBER + POW decay weights</td>
+              <td class="bad">Social team looks useless</td>
+            </tr>
+            <tr>
+              <td class="accent">M4 · Time</td>
+              <td>UTC in, display timezone as derived field. Lock week-start.</td>
+              <td>DATETIME(ts, timezone)</td>
+              <td class="bad">Weekend leads vanish</td>
+            </tr>
+            <tr>
+              <td class="accent">M5 · Quality</td>
+              <td>Reject the impossible. Document every exclusion.</td>
+              <td>CASE quality_flag + exclusion views</td>
+              <td class="bad">78% CTR on display</td>
+            </tr>
+            <tr>
+              <td class="accent">M6 · Viz</td>
+              <td>Aggregate → KPI + trend + table. Max 5 chart lines.</td>
+              <td>AVG OVER rolling window</td>
+              <td class="bad">847 lines on one chart</td>
+            </tr>
+            <tr>
+              <td class="accent">M7 · QA</td>
+              <td>Reconcile, label, wire filters, handle empties.</td>
+              <td>Pre-aggregated pipeline models</td>
+              <td class="bad">Finance disputes your number</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>Marketing & CRM Data Engineering · Training v1.0</div>
+  <div>BigQuery / Snowflake · Observable HQ compatible</div>
+</div>
+
+<script>
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Active nav highlighting
+  const sections = document.querySelectorAll('.module');
+  const navLinks = document.querySelectorAll('.nav a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.style.color = '');
+        const active = document.querySelector(`.nav a[href="#${e.target.id}"]`);
+        if (active) active.style.color = 'var(--accent)';
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
